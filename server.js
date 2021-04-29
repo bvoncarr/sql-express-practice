@@ -8,6 +8,7 @@ const PORT = 3000;
 app.use(express.json());
 app.use(express.urlencoded());
 
+
 app.get('/users', async (req, res) => {
   const users = await db.any("SELECT * FROM users").then((users) => {
     return users;
@@ -20,6 +21,26 @@ app.get('/comments', async (req, res) => {
     return comments;
   })
   res.send(comments);
+})
+
+app.post('/users', async (req, res) => {
+  const name = req.body.name;
+  const email = req.body.email;
+  await db.none(`INSERT INTO users (name, email) VALUES ($1, $2);`, [name, email])
+  res.send('user created');
+})
+
+app.post('/comments', async (req, res) => {
+  const comment = req.body.comment;
+  await db.any(`INSERT INTO comments (comment) VALUES ($1);`, [comment])
+  res.send('comment created');
+})
+
+app.put('/users', async (req, res) => {
+  const name = req.body.name;
+  const email = req.body.email;
+  await db.none(`INSERT INTO users (name, email) VALUES ($1, $2);`, [name, email])
+  res.send('user updated');
 })
 
 
